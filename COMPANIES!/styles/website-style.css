@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  color: #302e2e;
+}
+
+img {
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+}
+
+nav {
+  width: 100%;
+  -webkit-box-shadow: 3px 3px 3px 3px #d9ddd9;
+  box-shadow: 3px 3px 3px 3px #d9ddd9;
+  text-align: center;
+}
+
+header {
+  background: url('https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20(1%20of%201)-5.jpg?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+  padding: 100px;
+  height: 500px;
+  padding-bottom: 650px;
+}
+
+.left {
+  background: #fff;
+  width: 600px;
+  float: left;
+  padding: 20px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.right {
+  background: #fff;
+  width: 600px;
+  float: right;
+  padding: 20px;
+  height: 400px;
+  border-radius: 10px;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 44px;
+  letter-spacing: -1px;
+  margin: 15px;
+}
+
+p {
+  font-size: 18px;
+  margin: 15px;
+  width: 470px;
+  line-height: 1.7;
+}
+
+a,
+button {
+  padding: 10px;
+  border-radius: 100px;
+  font-size: 18px;
+  text-decoration: none;
+  background: #4e69b9;
+  color: #fff;
+  margin: 15px;
+  border: none;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+h2 {
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: -1;
+}
+
+.about {
+  padding: 30px;
+}
+
+.about h2 {
+  text-align: center;
+  margin: 30px;
+}
+
+h3 {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1;
+  margin: 15px;
+}
+
+footer {
+  display: block;
+  margin: auto;
+  color: #555;
+}
+
+footer p {
+  margin-left: 300px;
+}

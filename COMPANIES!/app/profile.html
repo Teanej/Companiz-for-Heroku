@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Companiz Profiles</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="chat.css" />
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div data-role="page">
+      <div data-role="content">
+        <div class="main-content">
+          <p>
+            PROFILE STATE :
+            <span id="room" class="namelite">&emsp;&emsp;</span>
+          </p>
+          <br />
+          <br />
+          <select id="room-list" class="align-left"></select>
+          <br />
+          <br />
+          <p>
+            Your Name:
+            <span id="name" class="namelite"></span>
+          </p>
+          <div class="center">
+            <div id="chat">
+              <br />
+            </div>
+            <br />
+            <input
+              type="text"
+              data-clear-btn="true"
+              id="msg"
+              placeholder="Type in your message"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      chatname = prompt('Enter your chat name:', 'Guest')
+      if (chatname == null) {
+        chatname = 'Guest'
+      }
+      $('#name').text(chatname)
+      poll()
+      get_room()
+    })
+
+    $('#msg').on('keyup', function (e) {
+      if (e.keyCode == 13) send()
+    })
+
+    $('#room-list').on('change', function () {
+      changed = $(this).find(':selected').val()
+      if (changed == 'create room') {
+        get_room(true)
+      } else {
+        $('#room').text(changed)
+      }
+    })
+
+    function send() {
+      msg = $('#msg').val()
+      if (msg.trim() == '') {
+        $('#msg').val('')
+        return
+      }
+
+      post_data = {
+        action: 'send',
+        room: $('#room').text(),
+        name: $('#name').text(),
+        msg: msg,
+      }
+      console.log(post_data)
+
+      $.ajax({
+        url: 'ajax-server.php',
+        type: 'POST',
+        data: post_data,
+        success: function (r) {
+          $('#chat').html(r).scrollTop($('#chat')[0].scrollHeight)
+          $('#msg').val('')
+        },
+      })
+    }
+
+    function poll() {
+      room = $('#room').text()
+      if (room.trim() != '') {
+        $.ajax({
+          url: 'ajax-server.php',
+          type: 'POST',
+          data: { action: 'poll', room: room },
+          success: function (r) {
+            $('#chat').html(r)
+          },
+        })
+      }
+      setTimeout(poll, 1000)
+    }
+
+    function get_room(create = false) {
+      post_data = { action: 'room' }
+      if (create) {
+        new_room = $('#name').text()
+        post_data['new'] = new_room
+      }
+      console.log(post_data)
+
+      $.ajax({
+        url: 'ajax-server.php',
+        type: 'POST',
+        data: post_data,
+        success: function (r) {
+          console.log(r)
+          obj = JSON.parse(r)
+          list_rooms = ''
+          for (id in obj) {
+            list_rooms +=
+              "<option value='" +
+              obj[id] +
+              "'>PROFILE : " +
+              obj[id] +
+              '</option>'
+          }
+          list_rooms +=
+            "<option value='create room'>CREATE YOUR PROFILE</option>"
+
+          $('#room-list').html(list_rooms).selectmenu('refresh', true)
+          room = $('#room').text()
+          if (room.trim() == '') {
+            $('#room').text('default-chat')
+          }
+          if (create) {
+            alert('Profile Name : ' + new_room)
+            $('#room').text($('#room-list').find(':selected').val())
+          }
+        },
+      })
+    }
+  </script>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Companiz | Core</title>
+    <link
+      rel="shortcut icon"
+      href="../../images/logo.png"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <style>
+      * {
+        font-family: 'Poppins';
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        color: #555;
+        outline: none;
+      }
+      .login {
+        background: #d4d4d4;
+        width: 440px;
+        border-radius: 20px;
+        padding: 20px;
+        margin: auto;
+        height: 360px;
+      }
+      input {
+        width: 250px;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 100px;
+        border: none;
+        box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.26);
+        -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.26);
+        -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.26);
+      }
+      p {
+        font-size: 18px;
+      }
+      h2 {
+        font-weight: 700;
+        font-size: 30px;
+      }
+      button {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 18px;
+        border: none;
+        
+        margin-left: 35px;
+        background: #2674cc;
+        color: #ffe;
+      }
+      #messages {
+        overflow-y: scroll;
+        background: #2674cc;
+        color: #ffe;
+        border: 1.5px solid #555;
+        width: 500px;
+        height: 300px;
+        margin: auto;
+      }
+      </style>
+    <div id="container">
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+      <div class="login">
+        <h2>Join or Create Company</h2>
+        <div style="float: left;">
+          <p>Your Companiz Username</p>
+
+          <input type="text" id="username" required/>
+          <br />
+          <br />
+          <p>Company Name</p>
+
+          <input type="text" id="company-name" required/>
+          <br />
+          <br />
+          <p>Company Password</p>
+
+          <input type="text" id="company-pass" required/>
+        </div>
+        <div style="float: right; margin: auto;">
+          <br />
+          <br />
+          <img
+            src="../../images/logo.png"
+            alt="Companiz Logo"
+            width="auto"
+            height="150"
+            required
+          />
+          <br />
+          <button type="button" id="submit-btn" onclick="app()">→</button>
+        </div>
+      </div>
+    <div id="message-container" style="display: none;text-align: center;">
+      <h2></h2>
+      <p></p>
+      <br>
+      <div id="messages"></div>
+      <br>
+      <input type="text" id="message-input" placeholder="Type your problem">
+      <br>
+
+    </div>
+    <script src=https://cdn.pubnub.com/sdk/javascript/pubnub.4.28.2.min.js></script>
+    <script>
+      let loginContainer = document.getElementById("container")
+
+      function app() {
+        
+        loginContainer.style.display = "none";
+        document.getElementById("message-container").style.display = "block"
+
+
+        var pubnub = new PubNub({
+            publishKey: 'demo',
+            subscribeKey: 'demo'
+        });
+        function $(id) {
+            return document.getElementById(id);
+        }
+        var box = $('messages'),
+            input = $('message-input'),
+            channel = `${document.getElementById("company-name").value}_${document.getElementById("company-pass").value}_channel`;
+        pubnub.addListener({
+            message: function(obj) {
+                box.innerHTML = ('' + obj.message).replace(/[<>]/g, '') + '<br>' + box.innerHTML
+            }
+        });
+        pubnub.subscribe({
+            channels: [channel]
+        });
+    
+        pubnub.publish({
+            channel: channel,
+            message: `${document.getElementById("username").value} joined`,
+            x: (input.value = `${document.getElementById("username").value} joined`)
+        });
+        input.addEventListener('keyup', function(e) {
+            if ((e.keyCode || e.charCode) === 13) {
+              pubnub.publish({
+                    channel: channel,
+                    message: `${document.getElementById("username").value}: ${input.value}`,
+                    x: (input.value = '')
+                });
+            }
+        });
+     }
+    </script>
+  </body>
+</html>
